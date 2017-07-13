@@ -19,18 +19,20 @@ const populateField = (field, data) => {
   let i;
   if(field === "comments"){
     data = preprocessData("comment", data)
+    window.commentData = data;
     i = 0
-    while(i < 25){
-      listElement = `<li class='comment'>${i}</li>`
+    while(i < data.length){
+      listElement = `<li class='comment'>Body: ${data[i].body} URL: ${data[i].link_url} Score: ${data[i].score}</li>`
       innerListElements = innerListElements.concat(listElement);
       i += 1;
     }
     console.log(data)
   } else {
     data = preprocessData("submitted", data)
+    window.submitData = data;
     i = 0;
-    while(i < 25){
-      listElement = `<li class='submit-item'>${i}</li>`
+    while(i < data.length){
+      listElement = `<li class='submit-item'>Title: ${data[i].title} URL: ${data[i].url} Score: ${data[i].score}</li>`
       innerListElements = innerListElements.concat(listElement);
       i += 1;
     }
@@ -42,36 +44,26 @@ const populateField = (field, data) => {
 const preprocessData = (type, data) => {
   let newData = [];
   if(type === "comment"){
-
-    // data.data.children.forEach((datum) => {
-    //   newData.push({
-    //     body: datum.data.body,
-    //     score: datum.data.score,
-    //     link_url: datum.data.link_url
-    //   });
-    // })
-    //
-    // newData.sort((a, b) => {
-    //   return a.score > b.score ? 1 : -1
-    // })
-    //
-
+    data.data.children.forEach((datum) => {
+      newData.push({
+        body: datum.data.body,
+        score: datum.data.score,
+        link_url: datum.data.link_url
+      });
+    })
   } else {
-
-    // data.data.children.forEach((datum) => {
-    //   newData.push({
-    //     title: datum.data.title,
-    //     score: datum.data.score,
-    //     url: datum.data.url
-    //   });
-    // })
-    //
-    // newData.sort((a, b) => {
-    //   return a.score > b.score ? 1 : -1
-    // })
-    //
+    data.data.children.forEach((datum) => {
+      newData.push({
+        title: datum.data.title,
+        score: datum.data.score,
+        url: datum.data.url
+      });
+    })
   }
 
+  newData.sort((a, b) => {
+    return a.score < b.score ? 1 : -1
+  })
 
   return newData;
 }
